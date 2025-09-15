@@ -1,6 +1,6 @@
 import { Box, Button, Input, InputLabel } from "@mui/material";
 import React, { useRef } from "react";
-const NewTodo: React.FC<{ onAddTodo: (text: string) => void }> = (props) => {
+const NewTodo: React.FC<{ onAddTodo: (text: string) => void ; onEditTodo: (text: string) => void }> = (props) => {
   const todoTextInputRef = useRef<HTMLInputElement>(null);
 
   const submitHandler = (event: React.FormEvent) => {
@@ -10,16 +10,15 @@ const NewTodo: React.FC<{ onAddTodo: (text: string) => void }> = (props) => {
     if (enteredText.trim().length === 0) {
       return;
     }
-
     props.onAddTodo(enteredText);
     todoTextInputRef.current!.value = "";
   };
 
   return (
     <Box
-      sx={{ width: "40rem", margin: "2rem auto" }}
-      component="form"
-      onSubmit={submitHandler}
+    component="form"
+    onSubmit={submitHandler}
+    sx={{ width: "40rem", margin: "2rem auto" }}
     >
       <InputLabel
         sx={{ display: "block", fontWeight: "bold", marginBottom: "0.5rem" }}
