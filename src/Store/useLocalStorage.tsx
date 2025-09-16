@@ -1,34 +1,26 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-type ReturnType<T> = [
-  T | undefined,
-  React.Dispatch<React.SetStateAction<T | undefined>>
-];
-
-export const useLocalStorage = <T,>(
-  key: string,
-  initialvalue?: T
-): ReturnType<T> => {
-  const [state, setState] = useState<T | undefined>(() => {
-    if (!initialvalue) return;
+export function useLocalStorage<T>(key: string, initialValue: T) {
+  const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const value = localStorage.getItem(key);
-      return value ? JSON.parse(value) : initialvalue;
-    } catch (err) {
-      console.error("Error reading from localStorage:", err);
-      return initialvalue;
+      const item = localStorage.getItem(key);
+      return item ? (JSON.parse(item) as T) : initialValue;
+    } catch (error) {
+      console.error("Error reading localStorage key:", error);
+      return initialValue;
     }
   });
 
   useEffect(() => {
-    if (state) {
-      try {
-        localStorage.setItem(key, JSON.stringify(state));
-      } catch (err) {
-        console.error("Error writing to localStorage:", err);
-      }
-    }
-  }, [state, key]);
+    localStorage.setItem(key, JSON.stringify(storedValue));
+  }, [key, storedValue]);
 
-  return [state, setState];
-};
+  const setValue = (value: T | ((val: T) => T)) => {
+    setStoredValue((prevValue) => {
+      const newValue = value instanceof Function ? value(prevValue) : value;
+      return newValue;
+    });
+  };
+
+  return [storedValue, setValue] as const;
+}

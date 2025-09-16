@@ -4,8 +4,8 @@ import NewTodo from "./components/NewTodo";
 import Todo from "./models/todo";
 import { useLocalStorage } from "./Store/useLocalStorage";
 const App = () => {
-  const [todos, setTodos] = useLocalStorage<Todo[]>( "todos" ,[]);
-  const [editTodos, setEditTodos] = useState<string | null >(null);
+  const [todos, setTodos] = useLocalStorage<Todo[]>("todos", []);
+  const [editTodos, setEditTodos] = useState<string | null>(null);
 
   const addTodoHandler = (todoText: string) => {
     const newTodo = new Todo(todoText);
@@ -20,11 +20,13 @@ const App = () => {
   };
 
   const addUpdateHandler = (id: string, newText: string) => {
-  setTodos((prevTodos) =>
-    prevTodos.map(todo => (todo.id === id ? { ...todo, text: newText } : todo))
-  );
-  setEditTodos(null); 
-};
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, text: newText } : todo
+      )
+    );
+    setEditTodos(null);
+  };
 
   const removeTodoHandler = (todoId: string) => {
     setTodos((prevTodos) => {
